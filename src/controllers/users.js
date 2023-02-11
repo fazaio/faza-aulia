@@ -50,7 +50,7 @@ const CREATES_USERS = async (req, res) => {
 const UPDATE_USERS = async (req, res) => {
   try {
     await DB.connectToDB();
-    if (!req.body) throw new Error("Data update is required!");
+    if (!req.body) throw "Data update is required!";
 
     const id = req.params.id;
 
@@ -92,7 +92,7 @@ const DETAIL_USERS = async (req, res) => {
       ? (query.identityNumber = id)
       : (type = false);
 
-    if (!type) throw new Error("Invalid Params!");
+    if (!type) throw "Invalid Params!";
     let result = await USERS.findOne(query).exec();
 
     res.send(result);
