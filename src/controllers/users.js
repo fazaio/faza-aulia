@@ -1,14 +1,12 @@
-const DB = require("../configs/db");
 const USERS = require("../model/user.model");
 const middleware = require("../configs/middleware");
+const redisUsers = require("../utilities/redisUsers");
 
 const GENERATE_TOKEN = async (req, res) => {
   try {
     let data = {};
     data.username = "admin";
     data.password = "root";
-
-    await DB.connectToDB();
 
     let token = await middleware.generateToken(data);
     res.send(token);
@@ -19,7 +17,6 @@ const GENERATE_TOKEN = async (req, res) => {
 
 const READS_USERS = async (req, res) => {
   try {
-    await DB.connectToDB();
     let result = await USERS.find();
 
     res.send(result);
@@ -30,8 +27,6 @@ const READS_USERS = async (req, res) => {
 
 const CREATES_USERS = async (req, res) => {
   try {
-    await DB.connectToDB();
-
     const users = new USERS({
       userName: req.body.userName,
       accountNumber: req.body.accountNumber,
@@ -49,12 +44,17 @@ const CREATES_USERS = async (req, res) => {
 
 const UPDATE_USERS = async (req, res) => {
   try {
-    await DB.connectToDB();
     if (!req.body) throw "Data update is required!";
 
     const id = req.params.id;
 
     let result = await USERS.findByIdAndUpdate(id, req.body);
+
+    await redisUsers.deleteCacheUsers([
+      id,
+      result.accountNumber,
+      result.identityNumber,
+    ]); // Delete cache
 
     res.send(result);
   } catch (e) {
@@ -65,12 +65,17 @@ const UPDATE_USERS = async (req, res) => {
 
 const DELETE_USERS = async (req, res) => {
   try {
-    await DB.connectToDB();
     if (!req.body) throw new Error(false);
 
     const id = req.params.id;
 
     let result = await USERS.findByIdAndDelete(id);
+
+    await redisUsers.deleteCacheUsers([
+      id,
+      result.accountNumber,
+      result.identityNumber,
+    ]); // Delete cache
 
     res.send(result);
   } catch (e) {
@@ -81,11 +86,11 @@ const DELETE_USERS = async (req, res) => {
 
 const DETAIL_USERS = async (req, res) => {
   try {
-    await DB.connectToDB();
     const type = req.params.typenumber;
     const id = req.params.id;
 
     let query = {};
+    let result = false;
     type == "accountNumber"
       ? (query.accountNumber = id)
       : type == "identityNumber"
@@ -93,9 +98,21 @@ const DETAIL_USERS = async (req, res) => {
       : (type = false);
 
     if (!type) throw "Invalid Params!";
-    let result = await USERS.findOne(query).exec();
 
-    res.send(result);
+    // Redis cache!
+    if (await redisUsers.isCacheAvail(id)) {
+      console.log("load from cache");
+      result = await redisUsers.getValueUsers(id);
+
+      res.send(result);
+    } else {
+      console.log("load from db");
+
+      result = await USERS.findOne(query).exec();
+      await redisUsers.setValueUsers(id, JSON.stringify(result));
+
+      res.send(result);
+    }
   } catch (e) {
     let err = e ? e : "Bad Request";
     res.status(400).send(err);

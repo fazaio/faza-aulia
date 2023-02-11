@@ -1,9 +1,15 @@
 const express = require("express");
 const cors = require("cors");
 const users = require("./src/router/users");
+const DB = require("./src/configs/db");
+const REDIS = require("./src/configs/redis");
 
 const app = express();
 const bodyParser = require("body-parser");
+DB.connectToDB();
+REDIS.connectToServer();
+
+//  redis connection
 
 app.use(cors());
 app.use(bodyParser.json());
