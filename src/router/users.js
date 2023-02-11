@@ -4,7 +4,7 @@ const middleware = require("../configs/middleware");
 
 router.get("/generateToken", users.GENERATE_TOKEN);
 
-router.get("/all", users.READS_USERS);
+router.get("/all", middleware.isAuth, users.READS_USERS);
 router.post("/create", middleware.isAuth, users.CREATES_USERS);
 router.post("/update/:id", middleware.isAuth, users.UPDATE_USERS);
 router.delete("/delete/:id", middleware.isAuth, users.DELETE_USERS);
