@@ -1,11 +1,14 @@
 const jwt = require("jsonwebtoken");
 
 const isAuth = async (req, res, next) => {
-  const token = req.headers.token;
-  jwt.verify(token, "eyJ1c2VybmFtZSI6ImFkbWluIn0", (err) => {
-    if (err) return res.status(401).json("Unauthorize!");
+  const authHeader = req.headers["authorization"];
+  const token = authHeader && authHeader.split(" ")[1];
+  try {
+    jwt.verify(token, "eyJ1c2VybmFtZSI6ImFkbWluIn0");
     next();
-  });
+  } catch (e) {
+    return res.status(401).json("Unauthorize!");
+  }
 };
 
 const generateToken = async (payload) => {

@@ -2,23 +2,18 @@ const DB = require("../configs/db");
 const USERS = require("../model/user.model");
 const middleware = require("../configs/middleware");
 
-const LOGIN_USER = async (req, res) => {
+const GENERATE_TOKEN = async (req, res) => {
   try {
     let data = {};
-    data.username = req.body.username;
-    data.password = req.body.password;
+    data.username = "admin";
+    data.password = "root";
 
     await DB.connectToDB();
-    let result = await USERS.findOne(data);
 
-    if (result) {
-      let token = await middleware.generateToken(result);
-      res.send(token);
-    } else {
-      res.send("username/password is failed!");
-    }
+    let token = await middleware.generateToken(data);
+    res.send(token);
   } catch (e) {
-    res.status(401).send("failed login!");
+    res.status(401).send("failed generate token!");
   }
 };
 
@@ -36,7 +31,6 @@ const READS_USERS = async (req, res) => {
 const CREATES_USERS = async (req, res) => {
   try {
     await DB.connectToDB();
-    console.log(req.body);
 
     const users = new USERS({
       userName: req.body.userName,
@@ -113,6 +107,6 @@ module.exports = {
   CREATES_USERS,
   UPDATE_USERS,
   DELETE_USERS,
-  LOGIN_USER,
+  GENERATE_TOKEN,
   DETAIL_USERS,
 };
