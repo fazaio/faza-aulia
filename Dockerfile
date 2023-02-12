@@ -10,5 +10,5 @@ USER node
 CMD ["npm", "start"]
 
 FROM redis/redis-stack-server
-RUN redis-server
 EXPOSE 6379
+CMD start.sh
