@@ -10,4 +10,4 @@ USER node
 CMD ["npm", "start"]
 
 FROM redis/redis-stack-server
-RUN --name my-redis -p 6379:6379 -d redis
+EXPOSE 6379
