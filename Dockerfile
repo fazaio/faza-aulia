@@ -9,7 +9,7 @@ RUN chown -R node /usr/src/app
 USER node
 CMD ["npm", "start"]
 
-FROM redis:alpine
-COPY redis.conf /usr/local/etc/redis/redis.conf
+FROM redis
+# COPY start.sh .
 # EXPOSE 6379
-CMD [ "redis-server", "/usr/local/etc/redis/redis.conf" ]
+CMD start.sh
