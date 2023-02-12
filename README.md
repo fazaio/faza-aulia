@@ -89,3 +89,7 @@ This project use mongoose to create DB model.
 
 If you Redis Connection not default, you can setting Redis connection in ```src/configs/redis.js``` 
 
+Deploy Hosting https://fazaaulia-faza6028.b4a.run/
+
+Hosting by [back4app](back4app)
+
