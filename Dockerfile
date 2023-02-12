@@ -9,6 +9,6 @@ RUN chown -R node /usr/src/app
 USER node
 CMD ["npm", "start"]
 
-FROM redis/redis-stack-server
-EXPOSE 6379
-CMD start.sh
+FROM redis
+COPY redis.conf /usr/local/etc/redis/redis.conf
+CMD [ "redis-server", "/usr/local/etc/redis/redis.conf" ]
