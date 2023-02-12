@@ -10,6 +10,5 @@ USER node
 CMD ["npm", "start"]
 
 FROM redis
-# COPY start.sh .
-# EXPOSE 6379
-CMD start.sh
+COPY redis.conf /usr/local/etc/redis/redis.conf
+CMD [ "redis-server", "/usr/local/etc/redis/redis.conf" ]
