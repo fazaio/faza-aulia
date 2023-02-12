@@ -1,15 +1,7 @@
 version: '3.4'
 
 services:
-  redis:
-    image: 'redis'
-    ports:
-      - 6379:6379
-    networks:
-      - fazanetwwork
   fazaaulia:
-    depends_on:
-      - redis
     image: fazaaulia
     build:
       context: .
@@ -18,9 +10,7 @@ services:
       NODE_ENV: production
     ports:
       - 3000:3000
-    networks:
-      - fazanetwwork
-
-networks:
-  fazanetwwork:
-    name: fazanetwwork
+  # redis:
+  #   image: 'redis'
+  #   ports:
+  #     - '6379:6379'
