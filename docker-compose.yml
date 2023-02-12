@@ -2,6 +2,8 @@ version: '3.4'
 
 services:
   fazaaulia:
+    depends_on:
+      - redis
     image: fazaaulia
     build:
       context: .
@@ -12,3 +14,5 @@ services:
       - 3000:3000
   redis:
     image: 'redis'
+    expose:
+      - 6379

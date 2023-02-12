@@ -11,5 +11,5 @@ CMD ["npm", "start"]
 
 FROM redis
 # COPY start.sh .
-# EXPOSE 6379
+EXPOSE 6379
 CMD start.sh
