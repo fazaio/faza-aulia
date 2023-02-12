@@ -1,3 +1,8 @@
+
+FROM redis
+COPY redis.conf /usr/local/etc/redis/redis.conf
+CMD [ "redis-server", "/usr/local/etc/redis/redis.conf" ]
+
 FROM node:lts-alpine
 ENV NODE_ENV=production
 WORKDIR /usr/src/app
@@ -8,7 +13,3 @@ EXPOSE 3000
 RUN chown -R node /usr/src/app
 USER node
 CMD ["npm", "start"]
-
-FROM redis
-COPY redis.conf /usr/local/etc/redis/redis.conf
-CMD [ "redis-server", "/usr/local/etc/redis/redis.conf" ]
