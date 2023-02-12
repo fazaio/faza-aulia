@@ -5,5 +5,8 @@ module.exports = {
     await this.client.connect();
     console.log("Redis connected!");
   },
-  client: redis.createClient(),
+  client: redis.createClient({
+    host: "localhost",
+    port: 6379,
+  }),
 };
