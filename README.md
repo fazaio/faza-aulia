@@ -91,5 +91,9 @@ If you Redis Connection not default, you can setting Redis connection in ```src/
 
 Deploy Hosting https://fazaaulia-faza6028.b4a.run/
 
+Docker registry:
+```
+docker pull fazaio/faza-aulia
+```
 Hosting by [back4app](back4app)
 
